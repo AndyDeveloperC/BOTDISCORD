@@ -1,13 +1,23 @@
 require('dotenv').config();
+const http = require('http');
 const { Client, GatewayIntentBits, ChannelType, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+// Servidor HTTP simple para que Railway mantenga el contenedor encendido (Health Check)
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('🤖 Bot de Tickets para Discord activo 24/7 en Railway');
+}).listen(PORT, () => {
+    console.log(`🌐 Servidor HTTP para Railway escuchando en el puerto ${PORT}`);
+});
 
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-    ], // MessageContent REMOVED so it doesn't crash
+    ],
 });
 
-client.on('ready', () => {
+client.on('clientReady', () => {
     console.log('===================================================');
     console.log(`✅ Bot conectado correctamente como: ${client.user.tag}`);
     console.log('✅ El bot de TICKETS esta funcionando 24/7 en segundo plano.');
@@ -29,8 +39,10 @@ client.on('interactionCreate', async interaction => {
     let categoryName = '';
     let reason = '';
 
+    const cleanUsername = interaction.user.username.toLowerCase().replace(/[^a-z0-9]/g, '');
+
     if (interaction.customId === 'select_compra') {
-        ticketType = `compra-${interaction.user.username}`;
+        ticketType = `compra-${cleanUsername || interaction.user.id}`;
         categoryName = '🎄 MAIN'; 
         
         const valor = interaction.values[0];
@@ -40,11 +52,11 @@ client.on('interactionCreate', async interaction => {
         if (valor === 'compra_personalizado') reason = 'Paquete Personalizado';
         
     } else if (interaction.customId === 'soporte_instalacion') {
-        ticketType = `soporte-${interaction.user.username}`;
+        ticketType = `soporte-${cleanUsername || interaction.user.id}`;
         categoryName = '🤝 REFERENCIA Y SOPORTE';
         reason = 'Soporte de Instalación';
     } else if (interaction.customId === 'soporte_problemas') {
-        ticketType = `soporte-${interaction.user.username}`;
+        ticketType = `soporte-${cleanUsername || interaction.user.id}`;
         categoryName = '🤝 REFERENCIA Y SOPORTE';
         reason = 'Problemas Técnicos';
     } else {
