@@ -51,11 +51,19 @@ client.on('interactionCreate', async interaction => {
         return; 
     }
 
-    // Obtener canales actualizados para asegurar que la categoría existe en el caché
-    const channels = await interaction.guild.channels.fetch();
-    const category = channels.find(c => c.name === categoryName && c.type === ChannelType.GuildCategory);
-    
+    // Responder inmediatamente a Discord para evitar el error "La aplicación no ha respondido a tiempo" (Límite de 3 segundos)
     try {
+        await interaction.deferReply({ ephemeral: true });
+    } catch (e) {
+        console.error('Error al responder diferido:', e);
+        return;
+    }
+
+    try {
+        // Obtener canales actualizados para asegurar que la categoría existe en el caché
+        const channels = await interaction.guild.channels.fetch();
+        const category = channels.find(c => c.name === categoryName && c.type === ChannelType.GuildCategory);
+
         const ticketChannel = await interaction.guild.channels.create({
             name: ticketType,
             type: ChannelType.GuildText,
@@ -76,7 +84,7 @@ client.on('interactionCreate', async interaction => {
             ],
         });
 
-        await interaction.reply({ content: `✅ Tu ticket ha sido creado exitosamente: ${ticketChannel}`, ephemeral: true });
+        await interaction.editReply({ content: `✅ Tu ticket ha sido creado exitosamente: ${ticketChannel}` });
 
         const closeBtn = new ActionRowBuilder().addComponents(
             new ButtonBuilder().setCustomId('close_ticket').setLabel('🔒 Cerrar Ticket').setStyle(ButtonStyle.Danger)
@@ -89,7 +97,7 @@ client.on('interactionCreate', async interaction => {
 
     } catch (error) {
         console.error('Error al crear ticket:', error);
-        await interaction.reply({ content: '❌ Hubo un error al crear tu ticket. Asegurate de que el bot tiene permisos de administrador.', ephemeral: true });
+        await interaction.editReply({ content: '❌ Hubo un error al crear tu ticket. Asegúrate de que el bot tiene permisos de administrador en el servidor.' });
     }
 });
 
