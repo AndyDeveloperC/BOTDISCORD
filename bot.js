@@ -101,4 +101,15 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+const rawToken = process.env.DISCORD_TOKEN;
+const token = rawToken ? rawToken.trim().replace(/^["']|["']$/g, '') : null;
+
+if (!token) {
+    console.error('❌ ERROR CRÍTICO: La variable de entorno DISCORD_TOKEN no está configurada o está vacía en Railway.');
+    console.error('Por favor, agrega la variable DISCORD_TOKEN en la pestaña "Variables" de tu servicio en Railway.');
+    process.exit(1);
+}
+
+client.login(token).catch(err => {
+    console.error('❌ Error al iniciar sesión en Discord. Verifica que el DISCORD_TOKEN sea válido:', err.message);
+});
