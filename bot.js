@@ -17,12 +17,15 @@ const client = new Client({
     ],
 });
 
-client.on('clientReady', () => {
+const onReady = () => {
     console.log('===================================================');
     console.log(`✅ Bot conectado correctamente como: ${client.user.tag}`);
     console.log('✅ El bot de TICKETS esta funcionando 24/7 en segundo plano.');
     console.log('===================================================');
-});
+};
+
+client.on('ready', onReady);
+client.on('clientReady', onReady);
 
 // ESCUCHA DE BOTONES Y MENUS (CREACION DE TICKETS)
 client.on('interactionCreate', async interaction => {
@@ -63,7 +66,7 @@ client.on('interactionCreate', async interaction => {
         return; 
     }
 
-    // Responder inmediatamente a Discord para evitar el error "La aplicación no ha respondido a tiempo" (Límite de 3 segundos)
+    // Responder inmediatamente a Discord para evitar el error "La aplicación no ha respondido a tiempo"
     try {
         await interaction.deferReply({ ephemeral: true });
     } catch (e) {
@@ -72,7 +75,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     try {
-        // Obtener canales actualizados para asegurar que la categoría existe en el caché
+        // Obtener canales actualizados para asegurar que la categoría existe
         const channels = await interaction.guild.channels.fetch();
         const category = channels.find(c => c.name === categoryName && c.type === ChannelType.GuildCategory);
 
