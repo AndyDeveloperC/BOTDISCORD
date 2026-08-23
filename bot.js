@@ -19,7 +19,7 @@ const client = new Client({
 
 client.once(Events.ClientReady, () => {
     console.log('===================================================');
-    console.log(`✅ Bot conectado correctamente como: ${client.user.tag}`);
+    console.log(`✅ Bot conectado correctamente como: ${client.user.tag} (ID: ${client.user.id})`);
     console.log('✅ El bot de TICKETS esta funcionando 24/7 en segundo plano.');
     console.log('===================================================');
 });
