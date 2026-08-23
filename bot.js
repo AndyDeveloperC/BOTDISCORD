@@ -24,7 +24,7 @@ const onReady = () => {
     console.log('===================================================');
 };
 
-client.on('ready', onReady);
+
 client.on('clientReady', onReady);
 
 // ESCUCHA DE BOTONES Y MENUS (CREACION DE TICKETS)
