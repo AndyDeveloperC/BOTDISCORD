@@ -1,6 +1,6 @@
 require('dotenv').config();
 const http = require('http');
-const { Client, GatewayIntentBits, ChannelType, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ChannelType, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 // Servidor HTTP simple para que Railway mantenga el contenedor encendido (Health Check)
 const PORT = process.env.PORT || 3000;
@@ -17,7 +17,7 @@ const client = new Client({
     ],
 });
 
-client.on('ready', () => {
+client.once(Events.ClientReady, () => {
     console.log('===================================================');
     console.log(`✅ Bot conectado correctamente como: ${client.user.tag}`);
     console.log('✅ El bot de TICKETS esta funcionando 24/7 en segundo plano.');
@@ -25,7 +25,9 @@ client.on('ready', () => {
 });
 
 // ESCUCHA DE BOTONES Y MENUS (CREACION DE TICKETS)
-client.on('interactionCreate', async interaction => {
+client.on(Events.InteractionCreate, async interaction => {
+    console.log(`📥 Interacción recibida: ${interaction.customId || interaction.type} de ${interaction.user?.tag || interaction.user?.id || 'usuario desconocido'}`);
+
     if (!interaction.isStringSelectMenu() && !interaction.isButton()) return;
 
     // Manejar el boton de CERRAR TICKET
