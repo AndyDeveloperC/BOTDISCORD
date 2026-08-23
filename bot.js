@@ -1,6 +1,10 @@
 require('dotenv').config();
 const http = require('http');
-const { Client, Events, GatewayIntentBits, ChannelType, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ChannelType, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
+
+const WELCOME_CHANNEL_ID = '1523561895024398437';
+const FAREWELL_CHANNEL_ID = '1523561896224231465';
+const RULES_CHANNEL_ID = '1523518789927567430';
 
 // Servidor HTTP simple para que Railway mantenga el contenedor encendido (Health Check)
 const PORT = process.env.PORT || 3000;
@@ -14,6 +18,7 @@ http.createServer((req, res) => {
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
     ],
 });
 
@@ -22,6 +27,55 @@ client.once(Events.ClientReady, () => {
     console.log(`✅ Bot conectado correctamente como: ${client.user.tag} (ID: ${client.user.id})`);
     console.log('✅ El bot de TICKETS esta funcionando 24/7 en segundo plano.');
     console.log('===================================================');
+});
+
+// BIENVENIDAS Y DESPEDIDAS
+client.on(Events.GuildMemberAdd, async member => {
+    try {
+        const channel = await member.guild.channels.fetch(WELCOME_CHANNEL_ID);
+        if (!channel?.isTextBased()) {
+            console.error(`❌ Canal de bienvenidas no disponible: ${WELCOME_CHANNEL_ID}`);
+            return;
+        }
+
+        const embed = new EmbedBuilder()
+            .setColor(0x57F287)
+            .setTitle('👋 ¡Bienvenido/a a Six7!')
+            .setDescription(`Hola ${member}, esperamos que disfrutes de la comunidad.\n\nLee las reglas en <#${RULES_CHANNEL_ID}> para comenzar.`)
+            .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
+            .addFields({ name: '👥 Miembro', value: `Eres el miembro **#${member.guild.memberCount}**`, inline: true })
+            .setFooter({ text: 'Six7 • Gracias por unirte' })
+            .setTimestamp();
+
+        await channel.send({ content: `¡Bienvenido/a, ${member}!`, embeds: [embed] });
+        console.log(`✅ Bienvenida enviada para ${member.user.tag}`);
+    } catch (error) {
+        console.error('❌ Error al enviar la bienvenida:', error);
+    }
+});
+
+client.on(Events.GuildMemberRemove, async member => {
+    try {
+        const channel = await member.guild.channels.fetch(FAREWELL_CHANNEL_ID);
+        if (!channel?.isTextBased()) {
+            console.error(`❌ Canal de despedidas no disponible: ${FAREWELL_CHANNEL_ID}`);
+            return;
+        }
+
+        const embed = new EmbedBuilder()
+            .setColor(0xED4245)
+            .setTitle('👋 Un miembro se ha despedido')
+            .setDescription(`**${member.user.tag}** ha salido del servidor.\n\nEsperamos volver a verte pronto.`)
+            .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
+            .addFields({ name: '👥 Miembros actuales', value: `**${member.guild.memberCount}**`, inline: true })
+            .setFooter({ text: 'Six7 • Hasta pronto' })
+            .setTimestamp();
+
+        await channel.send({ embeds: [embed] });
+        console.log(`✅ Despedida enviada para ${member.user.tag}`);
+    } catch (error) {
+        console.error('❌ Error al enviar la despedida:', error);
+    }
 });
 
 // ESCUCHA DE BOTONES Y MENUS (CREACION DE TICKETS)
