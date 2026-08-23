@@ -17,7 +17,7 @@ const client = new Client({
     ],
 });
 
-client.on('clientReady', () => {
+client.on('ready', () => {
     console.log('===================================================');
     console.log(`✅ Bot conectado correctamente como: ${client.user.tag}`);
     console.log('✅ El bot de TICKETS esta funcionando 24/7 en segundo plano.');
