@@ -8,6 +8,8 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
 });
 
+const PURCHASE_CHANNEL_ID = '1523561899428544595';
+
 client.on('ready', async () => {
     console.log(`✅ Bot conectado como: ${client.user.tag}`);
 
@@ -35,10 +37,14 @@ client.on('ready', async () => {
 
     try {
         const channels = await guild.channels.fetch();
-        const chCompra = channels.find(c => c.name === '🛒・compra-aqui');
+        const chCompra = channels.get(PURCHASE_CHANNEL_ID);
         const chSoporte = channels.find(c => c.name === '🎫・ticket-support');
 
-        if (chCompra) {
+        if (!chCompra) {
+            throw new Error(`No se encontró o no se puede acceder al canal de compras ${PURCHASE_CHANNEL_ID}.`);
+        }
+
+        {
             console.log('Limpiando mensajes antiguos en 🛒・compra-aqui...');
             try {
                 const oldMsgs = await chCompra.messages.fetch({ limit: 20 });

@@ -5,6 +5,8 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds],
 });
 
+const PURCHASE_CHANNEL_ID = '1523561899428544595';
+
 client.on('ready', async () => {
     console.log(`✅ Bot conectado como: ${client.user.tag}`);
     const guild = client.guilds.cache.find(g => g.name === 'Six7');
@@ -16,10 +18,14 @@ client.on('ready', async () => {
 
     try {
         const channels = await guild.channels.fetch();
-        const chCompra = channels.find(c => c.name === '🛒・compra-aqui');
+        const chCompra = channels.get(PURCHASE_CHANNEL_ID);
         const chSoporte = channels.find(c => c.name === '🎫・ticket-support');
 
-        if (chCompra) {
+        if (!chCompra) {
+            throw new Error(`No se encontró o no se puede acceder al canal de compras ${PURCHASE_CHANNEL_ID}.`);
+        }
+
+        {
             const rowCompra = new ActionRowBuilder()
                 .addComponents(
                     new StringSelectMenuBuilder()
@@ -40,7 +46,7 @@ client.on('ready', async () => {
             console.log('Panel de compra enviado.');
         }
 
-        if (chSoporte) {
+        if (chSoporte && process.env.ONLY_PURCHASE !== '1') {
             const rowSoporte = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder().setCustomId('soporte_instalacion').setLabel('Soporte de Instalación').setStyle(ButtonStyle.Primary).setEmoji('⚙️'),
@@ -63,4 +69,6 @@ client.on('ready', async () => {
     }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+const rawToken = process.env.DISCORD_TOKEN;
+const token = rawToken ? rawToken.trim().replace(/^["']|["']$/g, '') : null;
+client.login(token);
