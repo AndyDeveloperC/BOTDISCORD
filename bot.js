@@ -5,6 +5,7 @@ const { Client, Events, GatewayIntentBits, ChannelType, PermissionsBitField, Act
 const WELCOME_CHANNEL_ID = '1523561895024398437';
 const FAREWELL_CHANNEL_ID = '1523561896224231465';
 const RULES_CHANNEL_ID = '1523518789927567430';
+const USER_ROLE_ID = '1524547241883336726';
 
 // Servidor HTTP simple para que Railway mantenga el contenedor encendido (Health Check)
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,13 @@ client.once(Events.ClientReady, () => {
 // BIENVENIDAS Y DESPEDIDAS
 client.on(Events.GuildMemberAdd, async member => {
     try {
+        try {
+            await member.roles.add(USER_ROLE_ID, 'Rol automático para nuevos miembros');
+            console.log(`✅ Rol Usuario asignado a ${member.user.tag}`);
+        } catch (roleError) {
+            console.error(`❌ No se pudo asignar el rol Usuario a ${member.user.tag}:`, roleError);
+        }
+
         const channel = await member.guild.channels.fetch(WELCOME_CHANNEL_ID);
         if (!channel?.isTextBased()) {
             console.error(`❌ Canal de bienvenidas no disponible: ${WELCOME_CHANNEL_ID}`);
