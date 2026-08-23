@@ -32,12 +32,12 @@ client.on('ready', async () => {
                         .setCustomId('select_compra')
                         .setPlaceholder('🛒 Selecciona el paquete que deseas comprar')
                         .addOptions([
-                            { label: 'Bypas Global', value: 'compra_bypas_global', emoji: '🌐' },
-                            { label: 'Bypas UID', value: 'compra_bypas_uid', emoji: '🆔' },
+                            { label: 'Bypass Global', value: 'compra_bypass_global', emoji: '🌐' },
+                            { label: 'Bypass UID', value: 'compra_bypass_uid', emoji: '🆔' },
                             { label: 'Panel Básico', value: 'compra_panel_basico', emoji: '🟢' },
                             { label: 'Panel Complex', value: 'compra_panel_complex', emoji: '🔥' },
                             { label: 'FiveM External', value: 'compra_fivem_external', emoji: '🎮' },
-                            { label: 'FiveM Bypas', value: 'compra_fivem_bypas', emoji: '🛡️' },
+                            { label: 'FiveM Bypass', value: 'compra_fivem_bypass', emoji: '🛡️' },
                         ]),
                 );
 
