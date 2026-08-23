@@ -32,10 +32,12 @@ client.on('ready', async () => {
                         .setCustomId('select_compra')
                         .setPlaceholder('🛒 Selecciona el paquete que deseas comprar')
                         .addOptions([
-                            { label: 'Pase 7 Días ($8 USD)', value: 'compra_7dias', emoji: '🥉' },
-                            { label: 'Pase 1 Mes ($15 USD)', value: 'compra_1mes', emoji: '🥈' },
-                            { label: 'Pase Permanente ($50 USD)', value: 'compra_permanente', emoji: '🥇' },
-                            { label: 'Paquete Personalizado', value: 'compra_personalizado', emoji: '💎' },
+                            { label: 'Bypas Global', value: 'compra_bypas_global', emoji: '🌐' },
+                            { label: 'Bypas UID', value: 'compra_bypas_uid', emoji: '🆔' },
+                            { label: 'Panel Básico', value: 'compra_panel_basico', emoji: '🟢' },
+                            { label: 'Panel Complex', value: 'compra_panel_complex', emoji: '🔥' },
+                            { label: 'FiveM External', value: 'compra_fivem_external', emoji: '🎮' },
+                            { label: 'FiveM Bypas', value: 'compra_fivem_bypas', emoji: '🛡️' },
                         ]),
                 );
 

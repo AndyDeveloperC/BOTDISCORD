@@ -110,6 +110,12 @@ client.on(Events.InteractionCreate, async interaction => {
         categoryName = '🎄 MAIN'; 
         
         const valor = interaction.values[0];
+        if (valor === 'compra_bypas_global') reason = 'Bypas Global';
+        if (valor === 'compra_bypas_uid') reason = 'Bypas UID';
+        if (valor === 'compra_panel_basico') reason = 'Panel Básico';
+        if (valor === 'compra_panel_complex') reason = 'Panel Complex';
+        if (valor === 'compra_fivem_external') reason = 'FiveM External';
+        if (valor === 'compra_fivem_bypas') reason = 'FiveM Bypas';
         if (valor === 'compra_7dias') reason = 'Pase de 7 Días ($8)';
         if (valor === 'compra_1mes') reason = 'Pase de 1 Mes ($15)';
         if (valor === 'compra_permanente') reason = 'Pase Permanente ($50)';
