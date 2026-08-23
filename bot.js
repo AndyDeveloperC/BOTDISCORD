@@ -14,6 +14,9 @@ http.createServer((req, res) => {
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.MessageContent,
     ],
 });
 
@@ -26,6 +29,7 @@ const onReady = () => {
 
 
 client.on('clientReady', onReady);
+
 
 // ESCUCHA DE BOTONES Y MENUS (CREACION DE TICKETS)
 client.on('interactionCreate', async interaction => {
